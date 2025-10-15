@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>idnumber-js 模块格式演示</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .result {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .error {
+            background: #ffe8e8;
+            color: #d00;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            border-bottom-color: #007cba;
+            background: #f8f9fa;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>idnumber-js 模块格式演示</h1>
+    <p>这个页面演示了 idnumber-js 库在不同环境下的使用方式</p>
+
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('commonjs')">CommonJS</div>
+        <div class="tab" onclick="showTab('esmodule')">ES Module</div>
+        <div class="tab" onclick="showTab('browser')">Browser</div>
+        <div class="tab" onclick="showTab('typescript')">TypeScript</div>
+    </div>
+
+    <!-- CommonJS 标签页 -->
+    <div id="commonjs" class="tab-content active">
+        <div class="container">
+            <h2>CommonJS 使用方式</h2>
+            <p>适用于 Node.js 环境，兼容性最好</p>
+            
+            <h3>安装</h3>
+            <div class="code-block">npm install idnumber-js</div>
+            
+            <h3>使用示例</h3>
+            <div class="code-block">const IdNumber = require('idnumber-js');
+
+// 验证身份证
+const isValid = IdNumber.validate('110101199003071234');
+
+// 解析身份证
+const info = IdNumber.parse('110101199003071234');
+
+// 生成身份证
+const generatedId = IdNumber.generate({
+  gender: 'male',
+  province: '11'
+});</div>
+            
+            <h3>测试结果</h3>
+            <div id="commonjs-result" class="result">点击下方按钮测试</div>
+            <button onclick="testCommonJS()">测试 CommonJS</button>
+        </div>
+    </div>
+
+    <!-- ES Module 标签页 -->
+    <div id="esmodule" class="tab-content">
+        <div class="container">
+            <h2>ES Module 使用方式</h2>
+            <p>适用于现代 Node.js 环境 (14+) 和现代浏览器</p>
+            
+            <h3>安装</h3>
+            <div class="code-block">npm install idnumber-js</div>
+            
+            <h3>使用示例</h3>
+            <div class="code-block">// 方式1：默认导入
+import IdNumber from 'idnumber-js';
+
+// 方式2：命名导入
+import { 
+  idCardValidate, 
+  parseIdCard, 
+  generateIdCard 
+} from 'idnumber-js';
+
+// 使用
+const isValid = idCardValidate('110101199003071234');
+const info = parseIdCard('110101199003071234');
+const generatedId = generateIdCard({ gender: 'male' });</div>
+            
+            <h3>Node.js 测试命令</h3>
+            <div class="code-block">node --input-type=module -e "import IdNumber from 'idnumber-js'; console.log(IdNumber.validate('110101199003071234'));"</div>
+        </div>
+    </div>
+
+    <!-- Browser 标签页 -->
+    <div id="browser" class="tab-content">
+        <div class="container">
+            <h2>浏览器使用方式</h2>
+            <p>通过 CDN 或本地文件引入，支持所有现代浏览器</p>
+            
+            <h3>CDN 引入</h3>
+            <div class="code-block">&lt;script src="https://unpkg.com/idnumber-js/dist/index.umd.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // 使用 IdNumber 全局变量
+  const isValid = IdNumber.validate('110101199003071234');
+  const generatedId = IdNumber.generate();
+&lt;/script&gt;</div>
+            
+            <h3>ES Module 引入 (现代浏览器)</h3>
+            <div class="code-block">&lt;script type="module"&gt;
+  import IdNumber from 'https://unpkg.com/idnumber-js/dist/index.mjs';
+  
+  const isValid = IdNumber.validate('110101199003071234');
+  const generatedId = IdNumber.generate();
+&lt;/script&gt;</div>
+            
+            <h3>测试结果</h3>
+            <div id="browser-result" class="result">点击下方按钮测试</div>
+            <button onclick="testBrowser()">测试浏览器版本</button>
+        </div>
+    </div>
+
+    <!-- TypeScript 标签页 -->
+    <div id="typescript" class="tab-content">
+        <div class="container">
+            <h2>TypeScript 使用方式</h2>
+            <p>提供完整的类型定义，支持类型检查和智能提示</p>
+            
+            <h3>安装</h3>
+            <div class="code-block">npm install idnumber-js
+npm install -D @types/node  # 如果使用 Node.js</div>
+            
+            <h3>使用示例</h3>
+            <div class="code-block">import IdNumber, { 
+  idCardValidate, 
+  parseIdCard, 
+  generateIdCard,
+  ParseResult,
+  GenerateOptions 
+} from 'idnumber-js';
+
+// 类型安全的使用
+const isValid: boolean = idCardValidate('110101199003071234');
+const info: ParseResult = parseIdCard('110101199003071234');
+const options: GenerateOptions = { gender: 'male', province: '11' };
+const generatedId: string = generateIdCard(options);</div>
+            
+            <h3>类型定义</h3>
+            <div class="code-block">interface ParseResult {
+  valid: boolean;
+  type: string;
+  typeName: string;
+  gender: string;
+  age: number;
+  birthday: string;
+  province: string;
+  error: string;
+}
+
+interface GenerateOptions {
+  province?: string;
+  gender?: 'male' | 'female';
+  startYear?: number;
+  endYear?: number;
+  // ... 更多选项
+}</div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟 IdNumber 对象用于演示
+        const IdNumber = {
+            validate: function(idCard) {
+                return /^\d{18}$/.test(idCard) && idCard.length === 18;
+            },
+            parse: function(idCard) {
+                if (!this.validate(idCard)) {
+                    return {
+                        valid: false,
+                        error: '身份证号码格式不正确'
+                    };
+                }
+                return {
+                    valid: true,
+                    type: '1',
+                    typeName: '二代居民身份证',
+                    gender: parseInt(idCard.slice(-2, -1)) % 2 === 1 ? '男' : '女',
+                    age: new Date().getFullYear() - parseInt(idCard.substring(6, 10)),
+                    birthday: idCard.substring(6, 10) + '-' + idCard.substring(10, 12) + '-' + idCard.substring(12, 14),
+                    province: '北京市',
+                    error: ''
+                };
+            },
+            generate: function(options) {
+                options = options || {};
+                const provinces = ['11', '31', '44', '32', '33'];
+                const province = options.province || provinces[Math.floor(Math.random() * provinces.length)];
+                const year = Math.floor(Math.random() * 20) + 1980;
+                const month = Math.floor(Math.random() * 12) + 1;
+                const day = Math.floor(Math.random() * 28) + 1;
+                const gender = options.gender || (Math.random() > 0.5 ? 'male' : 'female');
+                const genderCode = gender === 'male' ? Math.floor(Math.random() * 5) * 2 + 1 : Math.floor(Math.random() * 5) * 2;
+                
+                const id = province + '0101' + year + 
+                    month.toString().padStart(2, '0') + 
+                    day.toString().padStart(2, '0') + 
+                    '00' + genderCode + Math.floor(Math.random() * 10);
+                
+                return id;
+            }
+        };
+
+        function showTab(tabName) {
+            // 隐藏所有标签页
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的标签页
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function testCommonJS() {
+            const resultDiv = document.getElementById('commonjs-result');
+            try {
+                const isValid = IdNumber.validate('110101199003071234');
+                const generatedId = IdNumber.generate({ gender: 'male' });
+                const info = IdNumber.parse(generatedId);
+                
+                resultDiv.innerHTML = `
+                    <strong>测试结果:</strong><br>
+                    验证身份证: ${isValid ? '✅ 有效' : '❌ 无效'}<br>
+                    生成身份证: ${generatedId}<br>
+                    解析结果: ${info.gender}, ${info.age}岁, ${info.province}
+                `;
+                resultDiv.className = 'result';
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 错误: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function testBrowser() {
+            const resultDiv = document.getElementById('browser-result');
+            try {
+                const isValid = IdNumber.validate('110101199003071234');
+                const generatedId = IdNumber.generate({ gender: 'female' });
+                const info = IdNumber.parse(generatedId);
+                
+                resultDiv.innerHTML = `
+                    <strong>浏览器测试结果:</strong><br>
+                    验证身份证: ${isValid ? '✅ 有效' : '❌ 无效'}<br>
+                    生成身份证: ${generatedId}<br>
+                    解析结果: ${info.gender}, ${info.age}岁, ${info.province}
+                `;
+                resultDiv.className = 'result';
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 错误: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        // 页面加载时自动测试
+        window.onload = function() {
+            testCommonJS();
+        };
+    </script>
+</body>
+</html>

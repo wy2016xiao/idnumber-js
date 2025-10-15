@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>idnumber-js 浏览器示例</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .result {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .error {
+            background: #ffe8e8;
+            color: #d00;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px;
+            width: 200px;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>idnumber-js 浏览器示例</h1>
+    
+    <div class="container">
+        <h2>1. 身份证验证</h2>
+        <div class="form-group">
+            <label>身份证号:</label>
+            <input type="text" id="idCardInput" placeholder="请输入身份证号码" value="110101199003071234">
+            <button onclick="validateIdCard()">验证</button>
+        </div>
+        <div id="validateResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>2. 身份证解析</h2>
+        <div class="form-group">
+            <label>身份证号:</label>
+            <input type="text" id="parseInput" placeholder="请输入身份证号码" value="110101199003071234">
+            <button onclick="parseIdCard()">解析</button>
+        </div>
+        <div id="parseResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>3. 生成身份证</h2>
+        <div class="form-group">
+            <label>性别:</label>
+            <select id="genderSelect">
+                <option value="">随机</option>
+                <option value="male">男</option>
+                <option value="female">女</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>省份:</label>
+            <select id="provinceSelect">
+                <option value="">随机</option>
+                <option value="11">北京</option>
+                <option value="31">上海</option>
+                <option value="44">广东</option>
+                <option value="32">江苏</option>
+                <option value="33">浙江</option>
+            </select>
+        </div>
+        <button onclick="generateIdCard()">生成身份证</button>
+        <div id="generateResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>4. 生成其他证件</h2>
+        <button onclick="generateHKPermit()">生成香港通行证</button>
+        <button onclick="generateMacaoPermit()">生成澳门通行证</button>
+        <button onclick="generatePassport()">生成华侨护照</button>
+        <button onclick="generateTWPermit()">生成台湾通行证</button>
+        <div id="otherCardsResult" class="result"></div>
+    </div>
+
+    <div class="container">
+        <h2>5. 批量生成测试</h2>
+        <button onclick="batchGenerate()">批量生成10个身份证</button>
+        <div id="batchResult" class="result"></div>
+    </div>
+
+    <script>
+        // 注意：这里需要引入实际的库文件
+        // 在实际使用中，你需要通过CDN或本地文件引入
+        // <script src="https://unpkg.com/idnumber-js/dist/index.umd.js"></script>
+        
+        // 为了演示，这里使用模拟的IdNumber对象
+        // 在实际环境中，IdNumber会从库中加载
+        const IdNumber = {
+            validate: function(idCard) {
+                // 简化的验证逻辑
+                return /^\d{18}$/.test(idCard) && idCard.length === 18;
+            },
+            parse: function(idCard) {
+                if (!this.validate(idCard)) {
+                    return {
+                        valid: false,
+                        error: '身份证号码格式不正确'
+                    };
+                }
+                return {
+                    valid: true,
+                    type: '1',
+                    typeName: '二代居民身份证',
+                    gender: parseInt(idCard.slice(-2, -1)) % 2 === 1 ? '男' : '女',
+                    age: new Date().getFullYear() - parseInt(idCard.substring(6, 10)),
+                    birthday: idCard.substring(6, 10) + '-' + idCard.substring(10, 12) + '-' + idCard.substring(12, 14),
+                    province: '北京市',
+                    error: ''
+                };
+            },
+            generate: function(options) {
+                options = options || {};
+                const provinces = ['11', '31', '44', '32', '33'];
+                const province = options.province || provinces[Math.floor(Math.random() * provinces.length)];
+                const year = Math.floor(Math.random() * 20) + 1980;
+                const month = Math.floor(Math.random() * 12) + 1;
+                const day = Math.floor(Math.random() * 28) + 1;
+                const gender = options.gender || (Math.random() > 0.5 ? 'male' : 'female');
+                const genderCode = gender === 'male' ? Math.floor(Math.random() * 5) * 2 + 1 : Math.floor(Math.random() * 5) * 2;
+                
+                const id = province + '0101' + year + 
+                    month.toString().padStart(2, '0') + 
+                    day.toString().padStart(2, '0') + 
+                    '00' + genderCode + Math.floor(Math.random() * 10);
+                
+                return id;
+            },
+            generateHKMacaoPermit: function(options) {
+                options = options || {};
+                const prefix = options.region === 'Macao' ? 'M' : 'H';
+                const length = Math.random() > 0.5 ? 8 : 10;
+                let result = prefix;
+                for (let i = 0; i < length; i++) {
+                    result += Math.floor(Math.random() * 10);
+                }
+                return result;
+            },
+            generateChinesePassport: function() {
+                const prefix = Math.random() > 0.5 ? 'G' : 'E';
+                let result = prefix;
+                for (let i = 0; i < 8; i++) {
+                    result += Math.floor(Math.random() * 10);
+                }
+                return result;
+            },
+            generateTWPermit: function() {
+                let result = '';
+                for (let i = 0; i < 8; i++) {
+                    result += Math.floor(Math.random() * 10);
+                }
+                return result;
+            },
+            getCardType: function(cardNo) {
+                if (/^\d{18}$/.test(cardNo)) return '1';
+                if (/^H\d{8,10}$/.test(cardNo)) return 'G';
+                if (/^M\d{8,10}$/.test(cardNo)) return 'M';
+                if (/^[GE]\d{8}$/.test(cardNo)) return 'L';
+                if (/^\d{8}$/.test(cardNo)) return '6';
+                return '';
+            },
+            getCardTypeName: function(type) {
+                const types = {
+                    '1': '二代居民身份证',
+                    'G': '香港居民来往内地通行证',
+                    'M': '澳门居民来往内地通行证',
+                    'L': '华侨护照',
+                    '6': '台湾居民来往大陆通行证'
+                };
+                return types[type] || '未知证件类型';
+            },
+            getGender: function(idCard) {
+                if (idCard.length === 18) {
+                    return parseInt(idCard.slice(-2, -1)) % 2 === 1 ? '男' : '女';
+                }
+                return '';
+            }
+        };
+
+        function validateIdCard() {
+            const idCard = document.getElementById('idCardInput').value;
+            const isValid = IdNumber.validate(idCard);
+            const resultDiv = document.getElementById('validateResult');
+            
+            if (isValid) {
+                resultDiv.innerHTML = `✅ 身份证号码 ${idCard} 有效`;
+                resultDiv.className = 'result';
+            } else {
+                resultDiv.innerHTML = `❌ 身份证号码 ${idCard} 无效`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function parseIdCard() {
+            const idCard = document.getElementById('parseInput').value;
+            const result = IdNumber.parse(idCard);
+            const resultDiv = document.getElementById('parseResult');
+            
+            if (result.valid) {
+                resultDiv.innerHTML = `
+                    <strong>解析结果:</strong><br>
+                    类型: ${result.typeName}<br>
+                    性别: ${result.gender}<br>
+                    年龄: ${result.age}岁<br>
+                    生日: ${result.birthday}<br>
+                    省份: ${result.province}
+                `;
+                resultDiv.className = 'result';
+            } else {
+                resultDiv.innerHTML = `❌ ${result.error}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function generateIdCard() {
+            const gender = document.getElementById('genderSelect').value;
+            const province = document.getElementById('provinceSelect').value;
+            
+            const options = {};
+            if (gender) options.gender = gender;
+            if (province) options.province = province;
+            
+            const generatedId = IdNumber.generate(options);
+            const isValid = IdNumber.validate(generatedId);
+            const genderResult = IdNumber.getGender(generatedId);
+            
+            const resultDiv = document.getElementById('generateResult');
+            resultDiv.innerHTML = `
+                <strong>生成的身份证:</strong> ${generatedId}<br>
+                <strong>验证结果:</strong> ${isValid ? '✅ 有效' : '❌ 无效'}<br>
+                <strong>性别:</strong> ${genderResult}
+            `;
+            resultDiv.className = 'result';
+        }
+
+        function generateHKPermit() {
+            const permit = IdNumber.generateHKMacaoPermit({ region: 'HK' });
+            addToOtherCards(`香港通行证: ${permit}`);
+        }
+
+        function generateMacaoPermit() {
+            const permit = IdNumber.generateHKMacaoPermit({ region: 'Macao' });
+            addToOtherCards(`澳门通行证: ${permit}`);
+        }
+
+        function generatePassport() {
+            const passport = IdNumber.generateChinesePassport();
+            addToOtherCards(`华侨护照: ${passport}`);
+        }
+
+        function generateTWPermit() {
+            const permit = IdNumber.generateTWPermit();
+            addToOtherCards(`台湾通行证: ${permit}`);
+        }
+
+        function addToOtherCards(text) {
+            const resultDiv = document.getElementById('otherCardsResult');
+            const currentContent = resultDiv.innerHTML;
+            resultDiv.innerHTML = currentContent + text + '<br>';
+            resultDiv.className = 'result';
+        }
+
+        function batchGenerate() {
+            const resultDiv = document.getElementById('batchResult');
+            let html = '<strong>批量生成结果:</strong><br>';
+            
+            for (let i = 0; i < 10; i++) {
+                const id = IdNumber.generate();
+                const isValid = IdNumber.validate(id);
+                const gender = IdNumber.getGender(id);
+                const status = isValid ? '✅' : '❌';
+                html += `${i + 1}. ${id} - ${status} - ${gender}<br>`;
+            }
+            
+            resultDiv.innerHTML = html;
+            resultDiv.className = 'result';
+        }
+
+        // 页面加载时自动验证示例身份证
+        window.onload = function() {
+            validateIdCard();
+            parseIdCard();
+        };
+    </script>
+</body>
+</html>
