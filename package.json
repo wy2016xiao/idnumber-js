@@ -1,15 +1,16 @@
 {
   "name": "idnumber-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "type": "module",
   "description": "中国身份证号码及其他证件号码处理工具库，支持验证、解析、生成等功能",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json"
@@ -19,9 +20,10 @@
     "README.md"
   ],
   "scripts": {
-    "build": "node build.js",
+    "build": "rollup -c",
     "dev": "npm run build && npm run example",
-    "test": "node tests/test-simple.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "example": "node examples/basic-usage.js",
     "prepublishOnly": "npm run build && npm test"
   },
@@ -52,6 +54,20 @@
   "engines": {
     "node": ">=8.0.0"
   },
+  "engines-strict": true,
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "8"
+          },
+          "modules": false
+        }
+      ]
+    ]
+  },
   "os": [
     "darwin",
     "linux",
@@ -62,15 +78,16 @@
     "arm64"
   ],
   "devDependencies": {
-    "@babel/core": "^7.23.0",
-    "@babel/preset-env": "^7.23.0",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
     "@babel/register": "^7.23.0",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "jest": "^30.2.0",
     "mocha": "^6.2.3",
-    "rollup": "^4.6.1",
+    "rollup": "^4.52.4",
     "rollup-plugin-dts": "^6.1.0",
     "typescript": "^5.2.2"
   },

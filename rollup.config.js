@@ -1,31 +1,29 @@
-/**
- * Rollup 配置 - 从单一源码生成多格式
- */
-
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
-import terser from '@rollup/plugin-terser';
-import dts from 'rollup-plugin-dts';
-
-const packageJson = require('./package.json');
 
 export default [
-  // CommonJS build
+  // CommonJS build (for Node.js)
   {
     input: 'src/index.js',
     output: {
-      file: 'dist/index.js',
+      file: 'dist/index.cjs',
       format: 'cjs',
-      sourcemap: true,
-      exports: 'named'
+      exports: 'auto'
     },
     plugins: [
       resolve(),
       commonjs(),
       babel({
         babelHelpers: 'bundled',
-        exclude: 'node_modules/**'
+        presets: [
+          ['@babel/preset-env', {
+            targets: {
+              node: '8'
+            },
+            modules: false
+          }]
+        ]
       })
     ]
   },
@@ -34,44 +32,47 @@ export default [
     input: 'src/index.js',
     output: {
       file: 'dist/index.mjs',
-      format: 'esm',
-      sourcemap: true
+      format: 'esm'
     },
     plugins: [
       resolve(),
       commonjs(),
       babel({
         babelHelpers: 'bundled',
-        exclude: 'node_modules/**'
+        presets: [
+          ['@babel/preset-env', {
+            targets: {
+              node: '8'
+            },
+            modules: false
+          }]
+        ]
       })
     ]
   },
-  // UMD build for browsers
+  // UMD build (for browsers)
   {
     input: 'src/index.js',
     output: {
       file: 'dist/index.umd.js',
       format: 'umd',
       name: 'IdNumber',
-      sourcemap: true
+      exports: 'named'
     },
     plugins: [
       resolve(),
       commonjs(),
       babel({
         babelHelpers: 'bundled',
-        exclude: 'node_modules/**'
-      }),
-      terser()
+        presets: [
+          ['@babel/preset-env', {
+            targets: {
+              browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
+            },
+            modules: false
+          }]
+        ]
+      })
     ]
-  },
-  // TypeScript definitions
-  {
-    input: 'src/index.d.ts',
-    output: {
-      file: 'dist/index.d.ts',
-      format: 'esm'
-    },
-    plugins: [dts()]
   }
 ];
