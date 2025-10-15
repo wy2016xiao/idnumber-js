@@ -36,11 +36,31 @@
     "validation",
     "china"
   ],
-  "author": "thovino",
+  "author": {
+    "name": "thovino",
+    "url": "https://github.com/wy2016xiao"
+  },
   "license": "MIT",
+  "homepage": "https://github.com/wy2016xiao/idnumber-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wy2016xiao/idnumber-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wy2016xiao/idnumber-js/issues"
+  },
   "engines": {
     "node": ">=8.0.0"
   },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
   "devDependencies": {
     "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.23.0",

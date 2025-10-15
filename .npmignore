@@ -1,0 +1,27 @@
+# 源码文件
+src/
+tests/
+docs/
+examples/
+
+# 构建工具
+build.js
+rollup.config.js
+.babelrc
+
+# 开发文件
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# 测试文件
+coverage/
+.nyc_output/
+
+# 临时文件
+*.tmp
+*.temp
+
+# 文档
+PREPUBLISH_CHECKLIST.md
