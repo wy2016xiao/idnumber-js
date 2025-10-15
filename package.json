@@ -1,6 +1,6 @@
 {
   "name": "idnumber-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "中国身份证号码及其他证件号码处理工具库，支持验证、解析、生成等功能",
   "main": "dist/index.cjs",
@@ -62,8 +62,7 @@
         {
           "targets": {
             "node": "8"
-          },
-          "modules": false
+          }
         }
       ]
     ]
@@ -90,17 +89,5 @@
     "rollup": "^4.52.4",
     "rollup-plugin-dts": "^6.1.0",
     "typescript": "^5.2.2"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "8"
-          }
-        }
-      ]
-    ]
   }
 }
